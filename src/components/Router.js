@@ -9,7 +9,7 @@ export const AppRouter = () => {
             <>
                 <Switch>
                     <Route exact path="/" component={ LoginPage }/>
-                    <Route exact path="/blackboard*" component={ BlackboardPage }/>
+                    <Route exact path="/blackboard/:token" component={ BlackboardPage }/>
                     <Redirect to="/" />
                 </Switch>
             </>

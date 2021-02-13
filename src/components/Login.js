@@ -1,6 +1,6 @@
 import QRCode from 'qrcode';
-import '../css/login.css';
 import { useState } from 'react';
+import '../css/login.css';
 
 export const Login = () => {
 
@@ -33,7 +33,7 @@ export const Login = () => {
 
         const token = generateToken();
 
-        const url = window.location.href + `blackboard?${ token }`;
+        const url = window.location.href + `blackboard/${ token }`;
 
         // Generamos el QR
         const generateQR = async () => {
