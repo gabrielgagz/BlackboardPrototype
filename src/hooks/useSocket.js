@@ -1,44 +1,52 @@
 import { useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 
-const NEW_DRAW_EVENT = "newDrawEvent";
+const NEW_EVENT = "newEvent";
 const SOCKET_SERVER_URL = "http://192.168.1.31:4001";
 
 export const useSocket = ( token ) => {
 
+    // State de la pizarra
+    const [events, setEvents] = useState([]);
 
-    const [draws, setDraws] = useState([]);
+    // Ref al socket
     const socketRef = useRef();
 
     useEffect(() => {
 
-        // Creamos la conexión al socket
-        socketRef.current = socketIOClient(SOCKET_SERVER_URL, {
-            query: { token },
-        });
+        // Solo conectaremos si el token está definido
+        if ( token ) {
 
-        // Escuchamos nuevos eventos
-        socketRef.current.on(NEW_DRAW_EVENT, ( draw ) => {
+            // Creamos la conexión al socket
+            socketRef.current = socketIOClient  (SOCKET_SERVER_URL, {
+                query: { token },
+            });
 
-            setDraws(( draws ) => [...draws, draw]);
+            // Escuchamos nuevos eventos
+            socketRef.current.on(NEW_EVENT, ( event ) => {
 
-        });
+                setEvents(( events ) => [...events, event]);
 
-        // Destroys the socket reference
-        // when the connection is closed
-        return () => {
-            socketRef.current.disconnect();
-        };
+            });
 
-    }, [token]);
+
+            // Destroys the socket reference
+            // when the connection is closed
+            return () => {
+                socketRef.current.disconnect();
+            };
+
+        }
+
+    }, [ token ] );
 
     // Sends a message to the server that
     // forwards it to all users in the same room
-    const sendDraw = ( data ) => {
-    
-        socketRef.current.emit(NEW_DRAW_EVENT, data );
+    const sendEvents = ( data ) => {
+
+        socketRef.current.emit(NEW_EVENT, data );
     };
 
-    return { draws, sendDraw };
+    return { events, sendEvents };
 
 };

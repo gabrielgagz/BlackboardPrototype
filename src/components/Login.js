@@ -1,10 +1,44 @@
+import { useState, useEffect, useRef } from 'react';
+import  { useHistory } from 'react-router-dom'
+import { useSocket } from '../hooks/useSocket';
 import QRCode from 'qrcode';
-import { useState } from 'react';
 import '../css/login.css';
+
 
 export const Login = () => {
 
+    // Iniciamos el token vacio
+    const [token, setToken] = useState();
+
+    // State del boton generador
     const [state, setState] = useState( false );
+
+    // Conectamos al Socket
+    const { events } = useSocket( token );
+
+    // Guardamos la referencia al boton generador
+    const button = useRef();
+
+    // Usamos history del Router
+    const history = useHistory();
+
+    // Chequeamos que events cambie. El primer cambio corresponderá a la carga a través del QR nos redirigimos a la pizarra con el token correspondiente
+    useEffect( () => {
+
+        // Si hay evento, ejecutamos las acciones para la redirección
+        if ( events.length > 0 ) {
+
+            if ( events[0][0].token === token ) {
+                
+                // Deshabilitamos el boton y redireccionamos a la pizarra
+
+                button.current.disabled = true;
+                
+                history.push(`/login/${ token }`)
+            }
+        }
+
+    },[ events ]);
 
     const generateToken = () => {
 
@@ -21,22 +55,23 @@ export const Login = () => {
 
         }
 
+        // LLamamos al QR
+        generateQR(b.join("")  )
+
+        // Almacenamos el token
         return b.join("");
+    }
 
-}
-
-    const generateQR = () => {
+    const generateQR = ( token ) => {
 
         // Seleccionamos los objetos del boton y canvas
-        const button = document.querySelector('.btn');
+        button.current = document.querySelector('.btn');
         const loginCanvas = document.querySelector('#loginCanvas');
 
-        const token = generateToken();
-
-        const url = window.location.href + `blackboard/${ token }`;
+        const url = window.location.href + `login/${ token }/qr`;
 
         // Generamos el QR
-        const generateQR = async () => {
+        const setQR = async () => {
 
         try {
             await QRCode.toCanvas( loginCanvas, url, { scale: 7     } );
@@ -46,28 +81,28 @@ export const Login = () => {
 
         }
 
-        // Si el boton no fue generado, cambiamos el texto
+        // Si el boton no fue generado
+        // cambiamos el texto
         if ( !state ) {
-            button.innerHTML = "RECARGAR QR";
+            button.current.innerHTML = "RECARGAR QR";
             setState( true );
         }
 
-        // Dibujamos el QR
-        generateQR();
+        // Generamos el QR
+        setQR();
+    }
 
-}
-
-return (
-    <>
-        <button 
-        className='btn btn-lg btn-success mt-3 py-2 px-3'
-        onClick={ generateQR }
-        >
-            GENERAR QR
-        </button>
-        <canvas id='loginCanvas'></canvas>
-    </>
-)
+    return (
+        <>
+            <button 
+            className='btn btn-lg btn-success mt-3 py-2 px-3'
+            onClick={ () => setToken( generateToken() ) }
+            >
+                GENERAR QR
+            </button>
+            <canvas id='loginCanvas'></canvas>
+        </>
+    )
 
 }
 
