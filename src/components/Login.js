@@ -7,7 +7,7 @@ import '../css/login.css';
 
 export const Login = () => {
 
-    // Iniciamos el token vacio
+    // Start with an empty socket
     const [token, setToken] = useState();
 
     // State del boton generador
@@ -34,7 +34,7 @@ export const Login = () => {
 
                 button.current.disabled = true;
                 
-                history.push(`/login/${ token }`)
+                history.push(`/login/${ token }/web`);
             }
         }
 

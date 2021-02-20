@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 
 const NEW_EVENT = "newEvent";
-const SOCKET_SERVER_URL = "http://192.168.1.31:4001";
+const SOCKET_SERVER_URL = `${process.env.REACT_APP_API_KEY}`;
 
 export const useSocket = ( token ) => {
 
@@ -47,6 +47,6 @@ export const useSocket = ( token ) => {
         socketRef.current.emit(NEW_EVENT, data );
     };
 
-    return { events, sendEvents };
+    return { events, sendEvents, setEvents };
 
 };

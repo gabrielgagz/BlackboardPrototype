@@ -7,21 +7,23 @@ export const Blackboard = () => {
     // Obtenemos el token desde la dirección web
     const urlToken = window.location.pathname
         .replace("/login/", "")
-        .replace("/qr", "");
+        .replace("/qr", "")
+        .replace("/web", "");
 
     // Definimos si la web ha sido acticada desde el qr
     const isQrOn = window.location.href.includes("qr");
 
-    // State del Qr loader
+    // Qr loader state
     const [qrLoad, setQrLoad] = useState(false);
 
+    // Clean-Up state
+    const [ cleanUp, setCleanUp ] = useState( false );
+
     // Importamos el Hook para el uso de WebSocket
-    const { events, sendEvents } = useSocket(urlToken);
+    const { events, sendEvents, setEvents} = useSocket(urlToken);
 
     // Guardamos la referencia de lastPoint
     const lastPoint = useRef();
-
-    const [ cleanUp, setCleanUp ] = useState( false );
 
     useEffect(() => {
 
@@ -31,6 +33,16 @@ export const Blackboard = () => {
             sendEvents([{ token: urlToken, onUrl: true }]);
             setQrLoad(true);
 
+        }
+
+        // Check if events "cleanup" exists, if so, cleanup all events from server
+        if ( events.length > 0 ) {
+
+            // Capture the last event, trigered by "CLEAN UP" button
+            if (events[events.length -1][0].cleanup) {
+                setEvents([]);
+            }
+            
         }
 
         // Definimos el entorno
@@ -43,7 +55,7 @@ export const Blackboard = () => {
 
         // Definimos el trazado
         context.strokeStyle = "white";
-        context.lineWidth = 4;
+        context.lineWidth = 3;
         context.lineCap = "round";
 
         // Escribimos en la pizarra
@@ -64,7 +76,7 @@ export const Blackboard = () => {
             }
         };
 
-        // Acciones al mover el mouse o touch
+        // Actions executed when mouse is moved or touch is detected
         const eventMove = ( event, condition ) => {
 
             const posX = event.pageX - canvas.offsetLeft;
@@ -91,6 +103,7 @@ export const Blackboard = () => {
             }
         };
 
+        // Mouse Wrapper for move events
         const mouseMove = ( event ) => {
 
             const condition = event.buttons;
@@ -99,6 +112,7 @@ export const Blackboard = () => {
 
         }
 
+        // Touch Wrapper for move events
         const touchMove = ( event ) => {
 
             const touchEvent = event.changedTouches[0];
@@ -121,7 +135,7 @@ export const Blackboard = () => {
         // Clean up the screen
         if ( cleanUp ) { 
 
-        console.log( 'Limpiando' );
+        sendEvents([{ cleanup: true }])
         setCleanUp( false );
 
         }
