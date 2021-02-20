@@ -4,13 +4,13 @@ import "../css/blackboard.css";
 
 export const Blackboard = () => {
 
-    // Obtenemos el token desde la dirección web
+    // Get token from url
     const urlToken = window.location.pathname
         .replace("/login/", "")
         .replace("/qr", "")
         .replace("/web", "");
 
-    // Definimos si la web ha sido acticada desde el qr
+    // Check if we are coming from qr action
     const isQrOn = window.location.href.includes("qr");
 
     // Qr loader state
@@ -19,15 +19,14 @@ export const Blackboard = () => {
     // Clean-Up state
     const [ cleanUp, setCleanUp ] = useState( false );
 
-    // Importamos el Hook para el uso de WebSocket
     const { events, sendEvents, setEvents} = useSocket(urlToken);
 
-    // Guardamos la referencia de lastPoint
     const lastPoint = useRef();
 
     useEffect(() => {
 
         // Si la web viene a traves del QR emitimos el token, y validamos
+        // If 
         if (isQrOn && !qrLoad) {
 
             sendEvents([{ token: urlToken, onUrl: true }]);
@@ -45,26 +44,25 @@ export const Blackboard = () => {
             
         }
 
-        // Definimos el entorno
+        // CAnvas environment
         const canvas = document.querySelector("#bCanvas");
         const context = canvas.getContext("2d");
 
-        // Tamaño de la ventana
+        // Window Size
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        // Definimos el trazado
+        // Define the path
         context.strokeStyle = "white";
         context.lineWidth = 3;
         context.lineCap = "round";
 
-        // Escribimos en la pizarra
+        // Write
         const draw = (data) => {
 
-            // Obtenemos el trazado del servidor
+            // Get coordinate(s) from server
             const { lastPoint, x, y } = data[0];
 
-            // Chequeamos que lastPoint esté definido
             if ( lastPoint ) {
 
                 context.beginPath();
@@ -140,8 +138,7 @@ export const Blackboard = () => {
 
         }
 
-        // Recibimos los datos del servidor
-        // los y dibujamos en pantalla
+        // Get coordinates and draw
         events.forEach(draw);
 
         // Mouse Events

@@ -6,23 +6,23 @@ const SOCKET_SERVER_URL = `${process.env.REACT_APP_API_KEY}`;
 
 export const useSocket = ( token ) => {
 
-    // State de la pizarra
+    // Blackboard state
     const [events, setEvents] = useState([]);
 
-    // Ref al socket
+    // Socket ref
     const socketRef = useRef();
 
     useEffect(() => {
 
-        // Solo conectaremos si el token está definido
+        // Only connect if token is defined
         if ( token ) {
 
-            // Creamos la conexión al socket
+            // Create socket connection
             socketRef.current = socketIOClient  (SOCKET_SERVER_URL, {
                 query: { token },
             });
 
-            // Escuchamos nuevos eventos
+            // Earring new events
             socketRef.current.on(NEW_EVENT, ( event ) => {
 
                 setEvents(( events ) => [...events, event]);
