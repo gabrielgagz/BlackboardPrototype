@@ -32,7 +32,6 @@ export const Login = () => {
                 
                 // Disable button and redirect to blackboard component
                 button.current.disabled = true;
-                
                 history.push(`/login/${ token }/web`);
             }
         }

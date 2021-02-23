@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import  { useHistory } from 'react-router-dom';
 import { useSocket } from "../hooks/useSocket";
 import "../css/blackboard.css";
 
@@ -23,10 +24,12 @@ export const Blackboard = () => {
 
     const lastPoint = useRef();
 
+    // Use Router history
+    const history = useHistory();
+
     useEffect(() => {
 
-        // Si la web viene a traves del QR emitimos el token, y validamos
-        // If 
+        // Check if user comes from Qr code
         if (isQrOn && !qrLoad) {
 
             sendEvents([{ token: urlToken, onUrl: true }]);
@@ -37,6 +40,15 @@ export const Blackboard = () => {
         // Check if events "cleanup" exists, if so, cleanup all events from server
         if ( events.length > 0 ) {
 
+            // Go to home if user limit is exceeded
+            if ( events[0][0].error ) {
+
+                console.log( 'Too many users' );
+                history.push(`/`);
+                return
+
+            }
+
             // Capture the last event, trigered by "CLEAN UP" button
             if (events[events.length -1][0].cleanup) {
                 setEvents([]);
@@ -44,7 +56,7 @@ export const Blackboard = () => {
             
         }
 
-        // CAnvas environment
+        // Canvas environment
         const canvas = document.querySelector("#bCanvas");
         const context = canvas.getContext("2d");
 
