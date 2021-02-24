@@ -40,7 +40,7 @@ export const Blackboard = () => {
         // Check if events "cleanup" exists, if so, cleanup all events from server
         if ( events.length > 0 ) {
 
-            // Go to home if user limit is exceeded
+            // Back to home if user limit is exceeded
             if ( events[0][0].error ) {
 
                 console.log( 'Too many users' );

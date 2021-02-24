@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Blackboard component tests Component should be rendered 1`] = `
+<div
+  className="blackboard"
+>
+  <canvas
+    id="bCanvas"
+  />
+  <div
+    className="buttons"
+  >
+    <button
+      className="btn btn-primary mb-3 col-sm"
+      onClick={[Function]}
+    >
+      CLEAN UP
+    </button>
+    <button
+      className="btn btn-danger col-sm"
+    >
+      EXIT
+    </button>
+  </div>
+</div>
+`;
