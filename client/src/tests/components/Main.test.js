@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { Main } from '../components/Main';
+import { Main } from '../../components/Main';
 
 describe('Main component tests', () => {
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { Blackboard } from '../components/Blackboard';
+import { Blackboard } from '../../components/Blackboard';
 
 describe('Blackboard component tests', () => {
 
