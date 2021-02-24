@@ -5,11 +5,9 @@ const io = require("socket.io")(server, {
     },
 });
 
-const uuid = require('uuid');
-let connectedUsers = 0;
-
 const PORT = 4001;
 const NEW_EVENT = "newEvent";
+let connectedUsers = 0;
 
 io.on("connection", (socket) => {
 
