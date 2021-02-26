@@ -4,9 +4,9 @@ import { Login } from '../../components/Login';
 
 describe('Login component tests', () => {
 
+    const wrapper = shallow( <Login /> );
+
     test('Component should be rendered', () => {
-        
-        const wrapper = shallow( <Login /> );
 
         expect( wrapper ).toMatchSnapshot();
 

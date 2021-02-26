@@ -43,8 +43,11 @@ export const Blackboard = () => {
             // Back to home if user limit is exceeded
             if ( events[0][0].error ) {
 
-                console.log( 'Too many users' );
-                history.push(`/`);
+                history.push({
+                    pathname: '/',
+                    state: { detail: true }
+                });
+
                 return
 
             }
@@ -145,8 +148,8 @@ export const Blackboard = () => {
         // Clean up the screen
         if ( cleanUp ) { 
 
-        sendEvents([{ cleanup: true }])
-        setCleanUp( false );
+            sendEvents([{ cleanup: true }])
+            setCleanUp( false );
 
         }
 
