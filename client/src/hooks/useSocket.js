@@ -45,8 +45,9 @@ export const useSocket = ( token ) => {
     const sendEvents = ( data ) => {
 
         socketRef.current.emit(NEW_EVENT, data );
+
     };
 
     return { events, sendEvents, setEvents };
 
-};
+}

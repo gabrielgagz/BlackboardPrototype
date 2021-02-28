@@ -4,6 +4,7 @@ import { Blackboard as BlackboardPage } from './Blackboard';
 import { Login as LoginPage } from './Login';
 
 export const AppRouter = () => {
+    
     return (
         <Router>
             <>

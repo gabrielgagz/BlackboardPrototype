@@ -22,6 +22,7 @@ export const Blackboard = () => {
 
     const { events, sendEvents, setEvents} = useSocket(urlToken);
 
+    // Coordinates
     const lastPoint = useRef();
 
     // Use Router history

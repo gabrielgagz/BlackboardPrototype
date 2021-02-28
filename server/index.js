@@ -7,7 +7,6 @@ const io = require("socket.io")(server, {
 
 const PORT = 4001;
 const NEW_EVENT = "newEvent";
-let connectedUsers = 0;
 
 io.on("connection", (socket) => {
 
@@ -19,7 +18,7 @@ io.on("connection", (socket) => {
     // Get number of clients in room
     const usersConnected = parseInt( io.sockets.adapter.rooms.get( token ).size);
 
-    console.log( 'Conectado: ' + token + ' - Usuarios: ' + usersConnected );
+    console.log( 'Connected: ' + token + ' - Users: ' + usersConnected );
 
     // Number of users is limited to 2 per room
     if ( usersConnected > 2 ) 
@@ -35,13 +34,13 @@ io.on("connection", (socket) => {
     // Leave room and close socket
     socket.on("disconnect", () => {
         socket.leave(token);
-        console.log( 'Desconectado: ' + token )
+        console.log( 'Disconnected: ' + token )
     });
 
 });
 
 server.listen(PORT, () => {
 
-    console.log(`Servidor iniciado en puerto: ${PORT}`);
+    console.log(`Server started at port: ${PORT}`);
     
 });

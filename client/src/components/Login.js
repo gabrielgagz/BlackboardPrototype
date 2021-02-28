@@ -27,26 +27,27 @@ export const Login = () => {
 
     useEffect( () => {
 
-        console.log( location.state )
-
+        if (location.state) {
+            
         // Show toast error when you open a third session in the same room 
-        if ( Object.keys(location.state).length > 0 ) {
-
-            toast.error('😭 Too many users!', {
-                position: "bottom-center",
-                autoClose: 2000,
-                hideProgressBar: true,
-                closeOnClick: false,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-
-            history.replace( {
-                pathname: location.pathname,
-                state: {}
-            } );
-
+            if ( Object.keys(location.state).length > 0 ) {
+                
+                toast.error('😭 User limit exceeded!', {
+                    position: "bottom-center",
+                    autoClose: 2000,
+                    hideProgressBar: true,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            
+                history.replace( {
+                    pathname: location.pathname,
+                    state: {}
+                } );
+            
+            }
         }
 
         // Check if we have at least one event
