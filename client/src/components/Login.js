@@ -32,7 +32,7 @@ export const Login = () => {
         // Show toast error when you open a third session in the same room 
             if ( Object.keys(location.state).length > 0 ) {
                 
-                toast.error('😭 User limit exceeded!', {
+                toast.error('User limit was exceeded!', {
                     position: "bottom-center",
                     autoClose: 2000,
                     hideProgressBar: true,
@@ -116,7 +116,7 @@ export const Login = () => {
     return (
         <>
             <button 
-            className='btn btn-lg btn-success mt-3 py-2 px-3'
+            className='btn btn-login btn-lg btn-success mt-3 py-2 px-3'
             onClick={ () => setToken( generateToken() ) }
             >
                 GENERATE QR

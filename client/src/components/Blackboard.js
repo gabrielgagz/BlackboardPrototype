@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import  { useHistory } from 'react-router-dom';
 import { useSocket } from "../hooks/useSocket";
+import { Modal } from './Modal';
 import "../css/blackboard.css";
 
 export const Blackboard = () => {
@@ -27,6 +28,9 @@ export const Blackboard = () => {
 
     // Use Router history
     const history = useHistory();
+
+    // Modal
+    const modal = Modal();
 
     useEffect(() => {
 
@@ -171,14 +175,22 @@ export const Blackboard = () => {
     return (
         <div className='blackboard'>
             <canvas id="bCanvas"></canvas>
-            <div className='buttons'>
-                <button 
-                    className ='btn btn-primary mb-3 col-sm'
+            <div className='buttons d-grid gap-2 md-block'>
+                <button
+                    className ='btn btn-primary'
+                    type = 'button'
                     onClick = { () => setCleanUp( true ) }
                     >
                     CLEAN UP
                 </button>
-                <button className='btn btn-danger col-sm'>EXIT</button>
+                <button 
+                    className='btn btn-danger'
+                    type = 'button'
+                    data-bs-toggle="modal"  data-bs-target="#bbModal"
+                >
+                    QUIT
+                </button>
+                { modal }
             </div>
         </div>
     );
