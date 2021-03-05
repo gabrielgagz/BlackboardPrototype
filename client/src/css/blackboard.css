@@ -20,14 +20,6 @@
     width: 100px;
 }
 
-.roomName {
-    bottom: 10px;
-    color: white;
-    font-size: 2.2vw;
-    position: absolute;
-    right: 16px;
-}
-
 #canvas  {
     position:absolute; 
     left:0px; 

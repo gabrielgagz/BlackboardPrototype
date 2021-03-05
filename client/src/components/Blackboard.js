@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import  { useHistory } from 'react-router-dom';
 import { useSocket } from "../hooks/useSocket";
+import {isMobile} from 'react-device-detect';
 import { Modal } from './Modal';
 import "../css/blackboard.css";
 
@@ -11,9 +12,6 @@ export const Blackboard = () => {
         .replace("/login/", "")
         .replace("/qr", "")
         .replace("/web", "");
-
-    // Check if we are coming from qr action
-    const isQrOn = window.location.href.includes("qr");
 
     // Qr loader state
     const [qrLoad, setQrLoad] = useState(false);
@@ -35,7 +33,7 @@ export const Blackboard = () => {
     useEffect(() => {
 
         // Check if user comes from Qr code
-        if (isQrOn && !qrLoad) {
+        if (isMobile && !qrLoad) {
 
             sendEvents([{ token: urlToken, onUrl: true }]);
             setQrLoad(true);
@@ -192,7 +190,6 @@ export const Blackboard = () => {
                 </button>
                 { modal }
             </div>
-            <div className='roomName'>{ urlToken }</div>
         </div>
     );
 };

@@ -3,6 +3,7 @@ import  { useHistory, useLocation } from 'react-router-dom'
 import { useSocket } from '../hooks/useSocket';
 import QRCode from 'qrcode';
 import { toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
 import 'react-toastify/dist/ReactToastify.css';
 import '../css/login.css';
 
@@ -65,24 +66,13 @@ export const Login = () => {
 
     const generateToken = () => {
 
-        // Token length
-        const length = 16;
-
-        const a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".split("");
-        let b = [];  
-
-        for (let i=0; i<length; i++) {
-
-        const j = (Math.random() * (a.length-1)).toFixed(0);
-        b[i] = a[j];
-
-        }
+        const uuid = uuidv4();
 
         // Qr call
-        generateQR(b.join("")  )
+        generateQR( uuid )
 
         // Return new token
-        return b.join("");
+        return uuid;
     }
 
     const generateQR = ( token ) => {
