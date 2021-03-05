@@ -192,6 +192,7 @@ export const Blackboard = () => {
                 </button>
                 { modal }
             </div>
+            <div className='roomName'>{ urlToken }</div>
         </div>
     );
 };
