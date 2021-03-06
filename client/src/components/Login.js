@@ -3,7 +3,6 @@ import  { useHistory } from 'react-router-dom'
 import { useSocket } from '../hooks/useSocket';
 import { v4 as uuidv4 } from 'uuid';
 import QRCode from 'qrcode';
-import 'react-toastify/dist/ReactToastify.css';
 import '../css/login.css';
 
 export const Login = () => {
