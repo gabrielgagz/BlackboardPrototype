@@ -20,15 +20,17 @@ io.on("connection", (socket) => {
 
     console.log( 'Connected: ' + token + ' - Users: ' + usersConnected );
 
+    const emmitEvent = ( data ) => {
+        io.in(token).emit(NEW_EVENT, data);
+    }
+
     // Number of users is limited to 2 per room
     if ( usersConnected > 2 ) 
-        io.to( socket.id ).emit(NEW_EVENT, [{ error: true }]);
+        emmitEvent([{ error: true }]);
 
     // Earring new events
     socket.on(NEW_EVENT, (data) => {
-
-        io.in(token).emit(NEW_EVENT, data);
-        
+        emmitEvent( data );
     });
 
     // Leave room and close socket

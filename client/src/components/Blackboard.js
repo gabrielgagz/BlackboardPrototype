@@ -9,9 +9,7 @@ export const Blackboard = () => {
 
     // Get token from url
     const urlToken = window.location.pathname
-        .replace("/login/", "")
-        .replace("/qr", "")
-        .replace("/web", "");
+        .replace("/login/", "");
 
     // Qr loader state
     const [qrLoad, setQrLoad] = useState(false);

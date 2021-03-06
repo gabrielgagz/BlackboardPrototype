@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import  { useHistory, useLocation } from 'react-router-dom'
 import { useSocket } from '../hooks/useSocket';
-import QRCode from 'qrcode';
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
+import QRCode from 'qrcode';
 import 'react-toastify/dist/ReactToastify.css';
 import '../css/login.css';
 
@@ -40,7 +40,7 @@ export const Login = () => {
                     closeOnClick: false,
                     pauseOnHover: true,
                     draggable: true,
-                    progress: undefined,
+                    progress: undefined
                 });
             
                 history.replace( {
@@ -58,7 +58,7 @@ export const Login = () => {
                 
                 // Disable button and redirect to blackboard component
                 button.current.disabled = true;
-                history.push(`/login/${ token }/web`);
+                history.push(`/login/${ token }`);
             }
         }
 
@@ -80,7 +80,7 @@ export const Login = () => {
         button.current = document.querySelector('.btn');
         const loginCanvas = document.querySelector('#loginCanvas');
 
-        const url = window.location.href + `login/${ token }/qr`;
+        const url = window.location.href + `login/${ token }`;
 
         // Generate Qr
         const setQR = async () => {
