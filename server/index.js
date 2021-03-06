@@ -16,7 +16,7 @@ io.on("connection", (socket) => {
     socket.join(token);
 
     // Get number of clients in room
-    const usersConnected = parseInt( io.sockets.adapter.rooms.get( token ).size);
+    const usersConnected = io.sockets.adapter.rooms.get( token ).size;
 
     console.log( 'Connected: ' + token + ' - Users: ' + usersConnected );
 
