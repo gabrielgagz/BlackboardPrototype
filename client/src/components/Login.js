@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import  { useHistory, useLocation } from 'react-router-dom'
+import  { useHistory } from 'react-router-dom'
 import { useSocket } from '../hooks/useSocket';
-import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 import QRCode from 'qrcode';
 import 'react-toastify/dist/ReactToastify.css';
@@ -24,32 +23,7 @@ export const Login = () => {
     // Use Router history
     const history = useHistory();
 
-    const location = useLocation();
-
     useEffect( () => {
-
-        if (location.state) {
-            
-        // Show toast error when you open a third session in the same room 
-            if ( Object.keys(location.state).length > 0 ) {
-                
-                toast.error('User limit was exceeded!', {
-                    position: "bottom-center",
-                    autoClose: 2000,
-                    hideProgressBar: true,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined
-                });
-            
-                history.replace( {
-                    pathname: location.pathname,
-                    state: {}
-                } );
-            
-            }
-        }
 
         // Check if we have at least one event
         if ( events.length > 0 ) {

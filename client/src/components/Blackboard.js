@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import  { useHistory } from 'react-router-dom';
 import { useSocket } from "../hooks/useSocket";
 import {isMobile} from 'react-device-detect';
 import { Modal } from './Modal';
@@ -22,11 +21,9 @@ export const Blackboard = () => {
     // Coordinates
     const lastPoint = useRef();
 
-    // Use Router history
-    const history = useHistory();
-
-    // Modal
-    const modal = Modal();
+    // Modal & actions
+    const [modalAction, setModalAction] = useState();
+    const modal = Modal( modalAction );
 
     useEffect(() => {
 
@@ -44,12 +41,8 @@ export const Blackboard = () => {
             // Back to home if user limit is exceeded
             if ( events[0][0].error ) {
 
-                history.push({
-                    pathname: '/',
-                    state: { detail: true }
-                });
-
-                return
+                const hiddenButton = document.querySelector('.hiddenButton');
+                hiddenButton.click();
 
             }
 
@@ -183,10 +176,18 @@ export const Blackboard = () => {
                     className='btn btn-danger'
                     type = 'button'
                     data-bs-toggle="modal"  data-bs-target="#bbModal"
+                    onClick = { () => setModalAction( true ) }
                 >
                     QUIT
                 </button>
                 { modal }
+                <button 
+                type = 'button'
+                className = 'hiddenButton'
+                data-bs-toggle="modal" data-bs-target="#bbModal"
+                onClick = { () => setModalAction( false ) }
+                >
+                </button>
             </div>
         </div>
     );
