@@ -22,7 +22,7 @@ io.on("connection", (socket) => {
 
     // Number of users is limited to 2 per room
     if ( usersConnected > 2 ) 
-        io.to( socket.id ).emit(NEW_EVENT, [{ error: true }]);
+        io.to(socket.id).emit(NEW_EVENT, [{ error: true }]);
 
     // Earring new events
     socket.on(NEW_EVENT, (data) => {
