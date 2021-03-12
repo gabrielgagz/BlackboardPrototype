@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSocket } from "../hooks/useSocket";
-import {isMobile} from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 import { Modal } from './Modal';
+import { v4 as uuidv4 } from 'uuid';
 import "../css/blackboard.css";
 
 export const Blackboard = () => {
@@ -10,20 +11,42 @@ export const Blackboard = () => {
     const urlToken = window.location.pathname
         .replace("/login/", "");
 
-    // Qr loader state
-    const [qrLoad, setQrLoad] = useState(false);
-
-    // Clean-Up state
+    // States
+    const [ envState, setEnvState ] = useState( false );
+    const [ qrLoad, setQrLoad ] = useState(false);
     const [ cleanUp, setCleanUp ] = useState( false );
 
-    const { events, sendEvents, setEvents} = useSocket(urlToken);
-
-    // Coordinates
+    // Refs
     const lastPoint = useRef();
+    const canvasRef = useRef();
+    const contextRef = useRef();
+    const uuidRef = useRef();
+
+    // Socket custom hook
+    const { events, sendEvents, setEvents} = useSocket(urlToken);
 
     // Modal & actions
     const [modalAction, setModalAction] = useState();
     const modal = Modal( modalAction );
+
+    useEffect( () => {
+
+        // Canvas environment
+        canvasRef.current = document.querySelector("#bCanvas");
+        contextRef.current = canvasRef.current.getContext("2d");
+
+        // Window Size
+        canvasRef.current.width = window.innerWidth;
+        canvasRef.current.height = window.innerHeight;
+
+        // Define the path
+        contextRef.current.strokeStyle = "white";
+        contextRef.current.lineWidth = 3;
+        contextRef.current.lineCap = "round";
+
+        uuidRef.current = uuidv4();
+
+    },[ envState ]);
 
     useEffect(() => {
 
@@ -45,49 +68,42 @@ export const Blackboard = () => {
                 hiddenButton.click();
 
             }
-
+            
             // Capture the last event, trigered by "CLEAN UP" button
             if (events[events.length -1][0].cleanup) {
+
                 setEvents([]);
+                setEnvState( !envState )
+                sendEvents([{}]);
+
             }
             
         }
 
-        // Canvas environment
-        const canvas = document.querySelector("#bCanvas");
-        const context = canvas.getContext("2d");
-
-        // Window Size
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        // Define the path
-        context.strokeStyle = "white";
-        context.lineWidth = 3;
-        context.lineCap = "round";
-
         // Write
-        const draw = (data) => {
+        const draw = ( data ) => {
 
             // Get coordinate(s) from server
             const { lastPoint, x, y } = data[0];
 
             if ( lastPoint ) {
 
-                context.beginPath();
-                context.moveTo(lastPoint.x, lastPoint.y);
-                context.lineTo(x, y);
-                context.stroke();
-                context.closePath();
+                contextRef.current.beginPath();
+                contextRef.current.moveTo(lastPoint.x, lastPoint.y);
+                contextRef.current.lineTo(x, y);
+                contextRef.current.stroke();
+                contextRef.current.closePath();
 
             }
+            
         };
 
         // Actions executed when mouse is moved or touch is detected
         const eventMove = ( event, condition ) => {
 
-            const posX = event.pageX - canvas.offsetLeft;
-            const posY = event.pageY - canvas.offsetTop;
+            const posX = event.pageX - canvasRef.current.offsetLeft;
+            const posY = event.pageY - canvasRef.current.offsetTop
+            
 
             if ( condition ) {
 
@@ -97,12 +113,21 @@ export const Blackboard = () => {
                     return;
 
                 }
+                
+                draw([
+                    {
+                        lastPoint: lastPoint.current,
+                        x: posX,
+                        y: posY
+                    }
+                ]);
 
                 sendEvents([
                     {
                         lastPoint: lastPoint.current,
                         x: posX,
-                        y: posY
+                        y: posY,
+                        uuid: uuidRef.current
                     }
                 ]);
 
@@ -114,7 +139,6 @@ export const Blackboard = () => {
         const mouseMove = ( event ) => {
 
             const condition = event.buttons;
-
             eventMove( event, condition );
 
         }
@@ -123,11 +147,8 @@ export const Blackboard = () => {
         const touchMove = ( event ) => {
 
             const touchEvent = event.changedTouches[0];
-
             const condition = event.touches;
-
             eventMove( touchEvent, condition );
-
             event.preventDefault();
 
         }
@@ -141,23 +162,30 @@ export const Blackboard = () => {
 
         // Clean up the screen
         if ( cleanUp ) { 
-
-            sendEvents([{ cleanup: true }])
+            
+            sendEvents([{ cleanup: true }]);
             setCleanUp( false );
 
         }
 
         // Get coordinates and draw
-        events.forEach(draw);
+        if ( events.length > 0 ) {
+
+            if ( events[0][0].uuid !== uuidRef.current ) {
+
+                events.forEach(draw);
+                
+            } 
+        }
 
         // Mouse Events
-        canvas.onmousemove = mouseMove;
-        canvas.onmouseup = moveUp;
+        canvasRef.current.onmousemove = mouseMove;
+        canvasRef.current.onmouseup = moveUp;
 
         // Touch Events
-        canvas.ontouchmove = touchMove;
-        canvas.ontouchend = moveUp;
-        canvas.ontouchcancel = moveUp;
+        canvasRef.current.ontouchmove = touchMove;
+        canvasRef.current.ontouchend = moveUp;
+        canvasRef.current.ontouchcancel = moveUp;
         
     });
 
