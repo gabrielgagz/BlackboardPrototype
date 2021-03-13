@@ -7,6 +7,12 @@
     height: 100%;
 }
 
+.bCanvas {
+    background-color: #0192757e;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
 .buttons {
     position: absolute; 
     top:15px; 

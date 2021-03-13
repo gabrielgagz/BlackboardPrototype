@@ -27,11 +27,13 @@ export const Login = () => {
         // Check if we have at least one event
         if ( events.length > 0 ) {
 
-            if ( events[0][0].token === token ) {
+            const event = events[0][0];
+
+            if ( event.token === token ) {
                 
                 // Disable button and redirect to blackboard component
                 button.current.disabled = true;
-                history.push(`/login/${ token }`);
+                history.push(`/login/${ token }`, { width: event.width, height: event.height });
             }
         }
 
@@ -53,7 +55,7 @@ export const Login = () => {
         button.current = document.querySelector('.btn');
         const loginCanvas = document.querySelector('#loginCanvas');
 
-        const url = window.location.href + `login/${ token }`;
+        const url = window.location.href + `login/${ token }/qr`;
 
         // Generate Qr
         const setQR = async () => {

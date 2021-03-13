@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import { useSocket } from "../hooks/useSocket";
-import { isMobile } from 'react-device-detect';
 import { Modal } from './Modal';
 import { v4 as uuidv4 } from 'uuid';
 import "../css/blackboard.css";
@@ -9,12 +9,16 @@ export const Blackboard = () => {
 
     // Get token from url
     const urlToken = window.location.pathname
-        .replace("/login/", "");
+        .replace("/login/", "")
+        .replace("/qr", "");
+
+    // Check if user is coming from qr action
+    const isQrOn = window.location.href.includes("qr");
 
     // States
-    const [ envState, setEnvState ] = useState( false );
-    const [ qrLoad, setQrLoad ] = useState(false);
-    const [ cleanUp, setCleanUp ] = useState( false );
+    const [envState, setEnvState] = useState( false );
+    const [qrLoad, setQrLoad ] = useState(false);
+    const [cleanUp, setCleanUp] = useState( false );
 
     // Refs
     const lastPoint = useRef();
@@ -23,11 +27,19 @@ export const Blackboard = () => {
     const uuidRef = useRef();
 
     // Socket custom hook
-    const { events, sendEvents, setEvents} = useSocket(urlToken);
+    const { events, sendEvents, setEvents } = useSocket(urlToken);
 
     // Modal & actions
     const [modalAction, setModalAction] = useState();
     const modal = Modal( modalAction );
+
+    // Get window size object from history
+    const history = useHistory();
+    const histWidth = history.location.state?.width;
+    const histHeight = history.location.state?.height;
+
+    // Set unique id per device
+    uuidRef.current = uuidv4();
 
     useEffect( () => {
 
@@ -36,24 +48,33 @@ export const Blackboard = () => {
         contextRef.current = canvasRef.current.getContext("2d");
 
         // Window Size
-        canvasRef.current.width = window.innerWidth;
-        canvasRef.current.height = window.innerHeight;
+        if ( !isQrOn ) {
+
+            canvasRef.current.width = histWidth;
+            canvasRef.current.height = histHeight;
+            canvasRef.current.classList.add("bCanvas");
+            
+        } else {
+
+            canvasRef.current.width = window.innerWidth;
+            canvasRef.current.height = window.innerHeight;
+
+        }
 
         // Define the path
         contextRef.current.strokeStyle = "white";
-        contextRef.current.lineWidth = 3;
+        contextRef.current.lineWidth = 2;
         contextRef.current.lineCap = "round";
 
-        uuidRef.current = uuidv4();
-
     },[ envState ]);
+
 
     useEffect(() => {
 
         // Check if user comes from Qr code
-        if (isMobile && !qrLoad) {
+        if (isQrOn && !qrLoad) {
 
-            sendEvents([{ token: urlToken, onUrl: true }]);
+            sendEvents([{ token: urlToken, width: window.innerWidth, height: window.innerHeight }]);
             setQrLoad(true);
 
         }
@@ -120,7 +141,7 @@ export const Blackboard = () => {
                         x: posX,
                         y: posY
                     }
-                ]);
+                ]); 
 
                 sendEvents([
                     {

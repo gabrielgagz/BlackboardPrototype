@@ -10,7 +10,7 @@ export const AppRouter = () => {
             <>
                 <Switch>
                     <Route exact path="/" component={ LoginPage }/>
-                    <Route exact path="/login/:token/" component={ BlackboardPage }/>
+                    <Route exact path="/login/:token/:qr?" component={ BlackboardPage }/>
                     <Redirect to="/" />
                 </Switch>
             </>
