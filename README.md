@@ -8,7 +8,7 @@ Regenerate node modules (client/server):
 
 Run (server):
 
-`nodemon index.js`
+`node index.js`
 
 Run (client):
 
