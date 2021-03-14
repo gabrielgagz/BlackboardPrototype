@@ -3,7 +3,7 @@
 exports[`Login component tests Component should be rendered 1`] = `
 <Fragment>
   <button
-    className="btn btn-lg btn-success mt-3 py-2 px-3"
+    className="btn btn-login btn-lg btn-success mt-3 py-2 px-3"
     onClick={[Function]}
   >
     GENERATE QR
