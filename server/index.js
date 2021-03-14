@@ -10,6 +10,8 @@ const NEW_EVENT = "newEvent";
 
 io.on("connection", (socket) => {
 
+    let isRoomOk = false;
+
     // Entering into token room
     const { token } = socket.handshake.query;
 
@@ -17,6 +19,8 @@ io.on("connection", (socket) => {
 
     // Get number of clients in room
     const usersConnected = io.sockets.adapter.rooms.get( token ).size;
+
+    if ( usersConnected === 2 ) { isRoomOk = true; }
 
     console.log( 'Connected: ' + token + ' - Users: ' + usersConnected );
 
@@ -31,8 +35,20 @@ io.on("connection", (socket) => {
 
     // Leave room and close socket
     socket.on("disconnect", () => {
+
         socket.leave(token);
-        console.log( 'Disconnected: ' + token )
+
+        console.log( 'Disconnected: ' + token + ' - Users: ' + (usersConnected-1) );
+
+        const usersOnDisconnect = (usersConnected - 1) <= 1;
+
+        console.log( isRoomOk, usersOnDisconnect)
+
+        if ( isRoomOk && usersOnDisconnect) {
+            isRoomOk = false;
+            io.in(token).emit(NEW_EVENT, [{ nousers: true }]);
+        }
+        
     });
 
 });

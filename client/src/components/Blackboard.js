@@ -33,7 +33,7 @@ export const Blackboard = () => {
     const [modalAction, setModalAction] = useState();
     const modal = Modal( modalAction );
 
-    // Get window size object from history
+    // Get window size from history
     const history = useHistory();
     const histWidth = history.location.state?.width;
     const histHeight = history.location.state?.height;
@@ -47,8 +47,8 @@ export const Blackboard = () => {
         canvasRef.current = document.querySelector("#bCanvas");
         contextRef.current = canvasRef.current.getContext("2d");
 
-        // Window Size
-        if ( !isQrOn ) {
+        // Window Size (bigger screen resize canvas to match lower screen)
+        if ( (window.innerWidth + window.innerHeight) >  ( histWidth + histHeight) ) {
 
             canvasRef.current.width = histWidth;
             canvasRef.current.height = histHeight;
@@ -71,7 +71,7 @@ export const Blackboard = () => {
 
     useEffect(() => {
 
-        // Check if user comes from Qr code
+        // Check if user comes from Qr code, if so, send token and window size
         if (isQrOn && !qrLoad) {
 
             sendEvents([{ token: urlToken, width: window.innerWidth, height: window.innerHeight }]);
@@ -83,10 +83,21 @@ export const Blackboard = () => {
         if ( events.length > 0 ) {
 
             // Back to home if user limit is exceeded
+            if ( events[events.length -1][0].nousers ) {
+
+                const hiddenButton = document.querySelector('.hiddenButton');
+                hiddenButton.click();
+                setModalAction('user-alone');
+
+            }
+            
+
+            // Back to home if user limit is exceeded
             if ( events[0][0].error ) {
 
                 const hiddenButton = document.querySelector('.hiddenButton');
                 hiddenButton.click();
+                setModalAction('user-limit');
 
             }
             
@@ -94,7 +105,7 @@ export const Blackboard = () => {
             if (events[events.length -1][0].cleanup) {
 
                 setEvents([]);
-                setEnvState( !envState )
+                setEnvState(!envState);
                 sendEvents([{}]);
 
             }
@@ -123,7 +134,7 @@ export const Blackboard = () => {
         const eventMove = ( event, condition ) => {
 
             const posX = event.pageX - canvasRef.current.offsetLeft;
-            const posY = event.pageY - canvasRef.current.offsetTop
+            const posY = event.pageY - canvasRef.current.offsetTop;
             
 
             if ( condition ) {
@@ -225,7 +236,7 @@ export const Blackboard = () => {
                     className='btn btn-danger'
                     type = 'button'
                     data-bs-toggle="modal"  data-bs-target="#bbModal"
-                    onClick = { () => setModalAction( true ) }
+                    onClick = { () => setModalAction( 'user-quit' ) }
                 >
                     QUIT
                 </button>
@@ -234,7 +245,6 @@ export const Blackboard = () => {
                 type = 'button'
                 className = 'hiddenButton'
                 data-bs-toggle="modal" data-bs-target="#bbModal"
-                onClick = { () => setModalAction( false ) }
                 >
                 </button>
             </div>
