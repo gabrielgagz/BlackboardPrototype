@@ -11,7 +11,7 @@ exports[`Blackboard component tests Component should be rendered 1`] = `
       "entries": Array [
         Object {
           "hash": "",
-          "key": "naqapa",
+          "key": "j9b11d",
           "pathname": "/",
           "search": "",
           "state": undefined,
@@ -25,7 +25,7 @@ exports[`Blackboard component tests Component should be rendered 1`] = `
       "listen": [Function],
       "location": Object {
         "hash": "",
-        "key": "naqapa",
+        "key": "j9b11d",
         "pathname": "/",
         "search": "",
         "state": undefined,
