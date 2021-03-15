@@ -11,7 +11,7 @@ export const Login = () => {
     const [token, setToken] = useState();
 
     // Generator button state
-    const [state, setState] = useState( false );
+    const [btnState, setBtnState] = useState( false );
 
     // Socket connection
     const { events } = useSocket( token );
@@ -69,9 +69,9 @@ export const Login = () => {
         }
 
         // Change text if button is clicked once
-        if ( !state ) {
+        if ( !btnState ) {
             button.current.innerHTML = "RELOAD QR";
-            setState( true );
+            setBtnState( true );
         }
 
         // Generate Qr
