@@ -5,7 +5,7 @@ const io = require("socket.io")(server, {
     },
 });
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 const NEW_EVENT = "newEvent";
 
 io.on("connection", (socket) => {
