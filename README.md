@@ -1,3 +1,5 @@
+![](preview.gif)
+
 # BlackBoard Prototype App
 
 Made it with React, Node.js and Socket.IO
